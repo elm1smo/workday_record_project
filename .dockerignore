@@ -1,0 +1,7 @@
+# Control de versiones
+.git
+.gitignore
+.gitattributes
+
+# Variables de entorno
+.env*

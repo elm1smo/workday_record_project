@@ -1,0 +1,27 @@
+name: workday_record_project
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    env_file:
+      - .env.db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app-spring:
+    build: . # Build con Dockerfile del proyecto
+    container_name: app_spring
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.backend
+    depends_on:
+      - db # 1ro BD, 2do app
+
+volumes:
+  postgres_data:
+    driver: local
+    name: postgres_data
