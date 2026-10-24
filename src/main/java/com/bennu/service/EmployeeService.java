@@ -20,7 +20,7 @@ public class EmployeeService {
 
     // Servicio crear empleado
     public void create(Employee employee) {
-        if(employeeMapper.exists(employee.employeeId)) {
+        if(employeeMapper.exists(employee.getEmployeeId())) {
             throw new DataIntegrityViolationException("El empleado ya existe");
         }
 
@@ -44,8 +44,8 @@ public class EmployeeService {
 
     // Servicio actualizar empleado
     public Employee update(Employee employee) {
-        if(!employeeMapper.exists(employee.employeeId)) {
-            throw new ResourceNotFoundException("No se encontró al empleado con ID: " + employee.employeeId);
+        if(!employeeMapper.exists(employee.getEmployeeId())) {
+            throw new ResourceNotFoundException("No se encontró al empleado con ID: " + employee.getEmployeeId());
         }
 
         employeeMapper.update(employee);

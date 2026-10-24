@@ -20,7 +20,7 @@ public class DepartmentService {
 
     // Servicio crear departamento
     public void create(Department department) {
-        if(departmentMapper.exists(department.departmentId)) {
+        if(departmentMapper.exists(department.getDepartmentId())) {
             throw new DataIntegrityViolationException("El departamento ya existe");
         }
 
@@ -44,8 +44,8 @@ public class DepartmentService {
 
     // Servicio actualizar departamento
     public Department update(Department department) {
-        if(!departmentMapper.exists(department.departmentId)) {
-            throw new ResourceNotFoundException("No se encontró al departamento con ID: " + department.departmentId);
+        if(!departmentMapper.exists(department.getDepartmentId())) {
+            throw new ResourceNotFoundException("No se encontró al departamento con ID: " + department.getDepartmentId());
         }
 
         departmentMapper.update(department);

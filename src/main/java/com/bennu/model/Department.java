@@ -1,6 +1,11 @@
 package com.bennu.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter 
+@Setter 
 public class Department {
-    public Long departmentId;
-    public String name;
+    private Long departmentId;
+    private String name;
 }

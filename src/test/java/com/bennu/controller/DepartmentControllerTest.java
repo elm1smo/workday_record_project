@@ -27,8 +27,8 @@ public class DepartmentControllerTest {
     @Test
     void shouldReturn200WhenDepartmentIsFound() throws Exception {
         Department dep = new Department();
-        dep.departmentId = 4L;
-        dep.name = "Ventas";
+        dep.setDepartmentId(4L);
+        dep.setName("Ventas");
         
         Mockito.when(departmentService.readById(4L)).thenReturn(dep);
 

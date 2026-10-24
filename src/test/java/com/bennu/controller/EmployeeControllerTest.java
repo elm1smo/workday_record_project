@@ -27,8 +27,8 @@ public class EmployeeControllerTest {
     @Test
     void shouldReturn200WhenEmployeeIsFound() throws Exception {
         Employee emp = new Employee();
-        emp.employeeId = 1L;
-        emp.name = "Carlos";
+        emp.setEmployeeId(1L);
+        emp.setName("Carlos");
         
         Mockito.when(employeeService.readById(1L)).thenReturn(emp);
 
