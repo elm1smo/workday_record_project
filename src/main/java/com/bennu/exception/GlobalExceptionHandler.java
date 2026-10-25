@@ -3,6 +3,7 @@ package com.bennu.exception;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -23,7 +24,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // errores por duplicidad de datos o violación de restricciones de integridad
+    // errores por duplicidad de datos o violación de restricciones de integridad en la BD
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> manageIntegrityErrors(DataIntegrityViolationException ex) {
         ErrorResponse error = new ErrorResponse(
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    // error por recurso no encontrado
+    // error por recurso no encontrado (dato no encontrado)
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> manageNotFoundResource(ResourceNotFoundException ex) {
 
@@ -47,17 +48,29 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND); // HTTP 404
     }
 
-    // error por endpoint no encontrado 
+    // error por endpoint no encontrado (ruta inexistente)
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorResponse> manageEndpointNotFound(NoHandlerFoundException ex) {
 
         ErrorResponse error = new ErrorResponse(
             HttpStatus.NOT_FOUND.value(),
             "Endpoint no encontrado",
-            "La ruta '" + ex.getRequestURL() + "' con el método HTTP '" + ex.getHttpMethod() + "' no existe en este servidor."
+            "La ruta '" + ex.getRequestURL() + "' no existe en este servidor."
         );
         
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND); // HTTP 404
+    }
+
+    // ruta existente, pero con método HTTP distinto
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        ErrorResponse error = new ErrorResponse(
+            HttpStatus.METHOD_NOT_ALLOWED.value(),
+            "Método no permitido",
+            "El método " + ex.getMethod() + " no está permitido para esta ruta."
+        );
+        
+        return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     // otros errores

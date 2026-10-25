@@ -2,8 +2,10 @@ package com.bennu.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bennu.exception.ResourceNotFoundException;
 import com.bennu.mapper.DepartmentMapper;
@@ -11,14 +13,10 @@ import com.bennu.model.Department;
 
 @Service 
 public class DepartmentService {
-    private final DepartmentMapper departmentMapper;
+    private @Autowired  DepartmentMapper departmentMapper;
 
-    // Inyección del mapper
-    public DepartmentService(DepartmentMapper departmentMapper) {
-        this.departmentMapper = departmentMapper;
-    }
-
-    // Servicio crear departamento
+    // Servicio crear departamento (=> debería devolver el ID generado)
+    @Transactional 
     public void create(Department department) {
         if(departmentMapper.exists(department.getDepartmentId())) {
             throw new DataIntegrityViolationException("El departamento ya existe");
@@ -43,6 +41,7 @@ public class DepartmentService {
     }
 
     // Servicio actualizar departamento
+    @Transactional 
     public Department update(Department department) {
         if(!departmentMapper.exists(department.getDepartmentId())) {
             throw new ResourceNotFoundException("No se encontró al departamento con ID: " + department.getDepartmentId());
@@ -54,6 +53,7 @@ public class DepartmentService {
     }
 
     // Servicio borrar departamento
+    @Transactional 
     public Department delete(Long id) {
         if(!departmentMapper.exists(id)) {
             throw new ResourceNotFoundException("No se encontró al departamento con ID: " + id);

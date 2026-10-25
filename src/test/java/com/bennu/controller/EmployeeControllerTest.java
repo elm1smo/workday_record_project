@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.bennu.constants.Constants;
 import com.bennu.exception.ResourceNotFoundException;
 import com.bennu.model.Employee;
 import com.bennu.service.EmployeeService;
@@ -33,7 +34,7 @@ public class EmployeeControllerTest {
         Mockito.when(employeeService.readById(1L)).thenReturn(emp);
 
         // ejecución y verificación
-        mockMvc.perform(get("/api/employee/1") // Ejecuta un GET simulado
+        mockMvc.perform(get(Constants.BASE_API + "/employee/1") // Ejecuta un GET simulado
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()) // validar: HTTP 200 OK
                 .andExpect(jsonPath("$.employeeId").value(1L)) // debe tener el ID indicado
@@ -46,7 +47,7 @@ public class EmployeeControllerTest {
             .thenThrow(new ResourceNotFoundException("No se encontro al empleado con ID: 99"));
 
         // ejecución y verificación
-        mockMvc.perform(get("/api/employee/99") // Ejecuta un GET simulado
+        mockMvc.perform(get(Constants.BASE_API + "/employee/99") // Ejecuta un GET simulado
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound()) // validar: HTTP 404 Not Found
                 .andExpect(jsonPath("$.status").value(404)) // debe tener el status indicado

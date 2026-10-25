@@ -2,8 +2,10 @@ package com.bennu.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bennu.exception.ResourceNotFoundException;
 import com.bennu.mapper.EmployeeMapper;
@@ -11,14 +13,10 @@ import com.bennu.model.Employee;
 
 @Service // Indica a Spring que esta clase debe tratarse como servicio
 public class EmployeeService {
-    private final EmployeeMapper employeeMapper;
+    private @Autowired  EmployeeMapper employeeMapper;
 
-    // Inyección del mapper
-    public EmployeeService(EmployeeMapper employeeMapper) {
-        this.employeeMapper = employeeMapper;
-    }
-
-    // Servicio crear empleado
+    // Servicio crear empleado (=> debería devolver el ID generado)
+    @Transactional 
     public void create(Employee employee) {
         if(employeeMapper.exists(employee.getEmployeeId())) {
             throw new DataIntegrityViolationException("El empleado ya existe");
@@ -43,6 +41,7 @@ public class EmployeeService {
     }
 
     // Servicio actualizar empleado
+    @Transactional 
     public Employee update(Employee employee) {
         if(!employeeMapper.exists(employee.getEmployeeId())) {
             throw new ResourceNotFoundException("No se encontró al empleado con ID: " + employee.getEmployeeId());
@@ -54,6 +53,7 @@ public class EmployeeService {
     }
 
     // Servicio borrar empleado
+    @Transactional 
     public Employee delete(Long id) {
         if(!employeeMapper.exists(id)) {
             throw new ResourceNotFoundException("No se encontró al empleado con ID: " + id);
