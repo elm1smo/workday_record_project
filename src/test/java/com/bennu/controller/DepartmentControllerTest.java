@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.bennu.exception.ResourceNotFoundException;
 import com.bennu.model.Department;
 import com.bennu.service.DepartmentService;
+import com.bennu.constants.Constants;
 
 @WebMvcTest(DepartmentController.class)
 public class DepartmentControllerTest {
@@ -27,13 +28,13 @@ public class DepartmentControllerTest {
     @Test
     void shouldReturn200WhenDepartmentIsFound() throws Exception {
         Department dep = new Department();
-        dep.departmentId = 4L;
-        dep.name = "Ventas";
+        dep.setDepartmentId(4L);
+        dep.setName("Ventas");
         
         Mockito.when(departmentService.readById(4L)).thenReturn(dep);
 
         // ejecución y verificación
-        mockMvc.perform(get("/api/department/4") // Ejecuta un GET simulado
+        mockMvc.perform(get(Constants.BASE_API + "/department/4") // Ejecuta un GET simulado
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()) // validar: HTTP 200 OK
                 .andExpect(jsonPath("$.departmentId").value(4L)) // debe tener el ID indicado
@@ -46,7 +47,7 @@ public class DepartmentControllerTest {
             .thenThrow(new ResourceNotFoundException("No se encontro al departamento con ID: 99"));
 
         // ejecución y verificación
-        mockMvc.perform(get("/api/department/99") // Ejecuta un GET simulado
+        mockMvc.perform(get(Constants.BASE_API + "/department/99") // Ejecuta un GET simulado
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound()) // validar: HTTP 404 Not Found
                 .andExpect(jsonPath("$.status").value(404)) // debe tener el status indicado

@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -19,24 +20,32 @@ public interface EmployeeMapper {
         INSERT INTO employee(department_id, boss_id, name, salary)
         VALUES(#{departmentId}, #{bossId}, #{name}, #{salary})
     """)
+    @Options(useGeneratedKeys = true, keyProperty = "employeeId") // permite devolver en el objeto el ID generado
     int create(Employee employee);
 
-    @Select("SELECT * FROM employee")
+    @Select("""
+        SELECT employee_id, department_id, boss_id, name, salary
+        FROM employee
+    """)
     List<Employee> readAll();
     
-    @Select("SELECT * FROM employee WHERE employee_id = #{id}")
+    @Select("""
+        SELECT employee_id, department_id, boss_id, name, salary
+        FROM employee
+        WHERE employee_id = #{id}
+    """)
     Employee readById(Long id);
 
     @Update("""
         UPDATE employee
-        SET department_id=#{departmentId}, boss_id=#{bossId}, name=#{name}, salary=#{salary}
-        WHERE employee_id=#{employeeId}
+        SET department_id = #{departmentId}, boss_id = #{bossId}, name = #{name}, salary = #{salary}
+        WHERE employee_id = #{employeeId}
     """)
     int update(Employee employee);
 
     @Delete("""
         DELETE FROM employee
-        WHERE employee_id=#{id}
+        WHERE employee_id = #{id}
     """)
     int delete(Long id);
 
